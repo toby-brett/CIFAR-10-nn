@@ -1,0 +1,51 @@
+from torchvision import datasets, transforms
+import torchvision
+import torch
+
+# Define transformations (resizing, normalization, etc.)
+transform = transforms.Compose([
+    transforms.ToTensor(),  # turns to pytorch tensor
+   # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)) # normalise so values are between -1 and 1 (idk why)
+])
+
+train_data = datasets.CIFAR10(
+    root='data',
+    train=True, # loads the training set
+    download=True,
+    transform=transform
+)
+
+test_data = datasets.CIFAR10(
+    root='data',
+    train=False, # loads the test set
+    download=True,
+    transform=transform
+)
+
+from torch.utils.data import DataLoader
+
+torch.manual_seed(42)
+
+loaders = {
+    'train': DataLoader(train_data,
+                        batch_size=128,
+                        shuffle=True,
+                        num_workers=1),
+
+    'test': DataLoader(test_data,
+                       batch_size=128,
+                       shuffle=False,
+                       num_workers=1)
+}
+
+import torch
+
+images = [image for image, label in train_data]
+labels = [label for image, label in train_data]
+
+image_tensors = torch.stack(images)  # Shape: [50000, 3, 32, 32] for CIFAR-10 train set
+labels = torch.tensor(labels)  # Shape: [50000]
+
+image_tensors[0], labels[1]
+
+image_tensors[0].shape
